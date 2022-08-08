@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  tamsui-test-express:
+    container_name: tamsui-test-express
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=dev
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./express:/src
+      - /src/node_modules
+    build:
+      context: ./express/
+    command: npm run dev
+    depends_on:
+      - mongodb
+  tamsui-test-elasticmq:
+    image: softwaremill/elasticmq
+    container_name: tamsui-test-elasticmq
+    ports:
+      - '9324-9325:9324-9325'
+    volumes:
+      - ./custom.conf:/opt/elasticmq.conf
+  tamsui-test-mongodb:
+    image: mongo:5.0.9
+    container_name: tamsui-test-mongodb
+    ports:
+      - '27017-27019:27017-27019'
+    volumes:
+      - ./mongo-volume:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=mongo-dev
