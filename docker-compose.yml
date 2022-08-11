@@ -6,7 +6,7 @@ services:
     environment:
       - NODE_ENV=dev
     ports:
-      - '3001:3001'
+      - '3003:3003'
     volumes:
       - ./express:/src
       - /src/node_modules

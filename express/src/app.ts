@@ -1,12 +1,21 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand"
+import config from "config";
+import responseTime from "response-time";
+import connect from "./utils/connect";
+import routes from "./routes";
+import deserializeUser from "./middleware/deserializeUser";
+import createServer from "./utils/server";
+import faktory, { JobFunction } from "faktory-worker";
 
-const app: Express = express();
-const port = 3001;
+const myEnv = dotenv.config();
+dotenvExpand.expand(myEnv);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+const port = parseInt(process.env.PORT as string);
+const app = createServer();
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
+
+app.listen(port, async () => {
+  await connect();
 });
