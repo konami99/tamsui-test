@@ -15,13 +15,6 @@ services:
     command: npm run dev
     depends_on:
       - mongodb
-  tamsui-test-elasticmq:
-    image: softwaremill/elasticmq
-    container_name: tamsui-test-elasticmq
-    ports:
-      - '9324-9325:9324-9325'
-    volumes:
-      - ./custom.conf:/opt/elasticmq.conf
   tamsui-test-mongodb:
     image: mongo:5.0.9
     container_name: tamsui-test-mongodb
@@ -34,3 +27,12 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
       - MONGO_INITDB_DATABASE=mongo-dev
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    environment: 
+      - AWS_DEFAULT_REGION=us-west-2
+      - EDGE_PORT=4566
+      - SERVICES=sns,sqs
+    ports:
+      - '4566-4597:4566-4597'
