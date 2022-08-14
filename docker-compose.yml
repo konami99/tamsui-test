@@ -36,3 +36,13 @@ services:
       - SERVICES=sns,sqs
     ports:
       - '4566-4597:4566-4597'
+  sqs_sns_setup:
+    image: amazon/aws-cli:latest
+    depends_on:
+      - localstack
+    restart: "no"
+    environment:
+      - AWS_DEFAULT_REGION=us-west-2
+    volumes:
+      - ~/.aws:/root/.aws
+    entrypoint: [ "bash", "-c", "sleep 10 && aws --endpoint-url=http://localstack:4566 sqs create-queue --queue-name onexlab && aws --endpoint-url=http://localstack:4566 sns create-topic --name onexlab-sns && aws --endpoint-url=http://localstack:4566 sns subscribe --topic-arn arn:aws:sns:us-west-2:000000000000:onexlab-sns --protocol sqs --notification-endpoint http://localstack:4566/000000000000/onexlab" ]
