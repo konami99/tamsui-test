@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"time"
 )
 
 func GetQueueURL(sess *session.Session, queue string) (*sqs.GetQueueUrlOutput, error) {
@@ -23,24 +24,59 @@ func GetQueueURL(sess *session.Session, queue string) (*sqs.GetQueueUrlOutput, e
 }
 
 func main() {
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2"),
-		Endpoint: aws.String("http://localhost:4566"),
-		Credentials: credentials.NewStaticCredentials("local", "local", ""),
-	})
+	for {
+		sess, err := session.NewSession(&aws.Config{
+			Region: aws.String("us-west-2"),
+			Endpoint: aws.String("http://localhost:4566"),
+			Credentials: credentials.NewStaticCredentials("local", "local", ""),
+		})
+	
+		if err != nil {
+			fmt.Printf("Failed to initialize new session: %v", err)
+			return
+		}
+	
+		queueName := "onexlab"
+	
+		urlRes, err := GetQueueURL(sess, queueName)
+		if err != nil {
+			fmt.Printf("Got an error while trying to create queue: %v", err)
+			return
+		}
+	
+		sqsClient := sqs.New(sess)
+	
+		var timeout int64 = 5
+	
+		msgResult, err := sqsClient.ReceiveMessage(&sqs.ReceiveMessageInput{
+			AttributeNames: []*string{
+				aws.String(sqs.MessageSystemAttributeNameSentTimestamp),
+			},
+			MessageAttributeNames: []*string{
+				aws.String(sqs.QueueAttributeNameAll),
+			},
+			QueueUrl:            urlRes.QueueUrl,
+			MaxNumberOfMessages: aws.Int64(1),
+			VisibilityTimeout:   &timeout,
+		})
 
-	if err != nil {
-		fmt.Printf("Failed to initialize new session: %v", err)
-		return
+		messages := msgResult.Messages
+		if len(messages) > 0 {
+			handle := msgResult.Messages[0].ReceiptHandle
+			// body := msgResult.Messages[0].Body
+			fmt.Println("Message Handle: " + *handle)
+			//fmt.Println("Got Queue URL: " + *urlRes.QueueUrl)
+
+			// process message
+
+			sqsClient.DeleteMessage(&sqs.DeleteMessageInput{
+				QueueUrl:      urlRes.QueueUrl,
+				ReceiptHandle: handle,
+			})
+
+			time.Sleep(2 * time.Second)
+		} else {
+			fmt.Println("No message")
+		}
 	}
-
-	queueName := "onexlab"
-
-	urlRes, err := GetQueueURL(sess, queueName)
-	if err != nil {
-		fmt.Printf("Got an error while trying to create queue: %v", err)
-		return
-	}
-
-	fmt.Println("Got Queue URL: " + *urlRes.QueueUrl)
 }
