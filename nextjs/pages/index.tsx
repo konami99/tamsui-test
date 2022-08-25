@@ -9,7 +9,7 @@ const Home: NextPage = () => {
   const url = process.env.NEXT_PUBLIC_EXPRESS_ENDPOINT as string;
 
   const sendEmail = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_ENDPOINT}/emails`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_ENDPOINT}/api/emails`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

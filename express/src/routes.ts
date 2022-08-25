@@ -7,7 +7,7 @@ import requireUser from "./middleware/requireUser";
 import { createEmailHandler } from "./controllers/email.controller";
 
 function routes(app: Express) {
-  app.post("/emails", createEmailHandler);
+  app.post("/api/emails", createEmailHandler);
 
   app.get("/healthcheck", (req: Request, res: Response) => res.sendStatus(200));
 
