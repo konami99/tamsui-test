@@ -29,13 +29,20 @@ services:
       - MONGO_INITDB_DATABASE=mongo-dev
   localstack:
     image: localstack/localstack:latest
-    container_name: localstack
+    container_name: tamsui-test-localstack
     environment: 
       - AWS_DEFAULT_REGION=us-west-2
       - EDGE_PORT=4566
       - SERVICES=sns,sqs
     ports:
       - '4566-4597:4566-4597'
+  worker:
+    container_name: tamsui-test-worker
+    build:
+      context: ./worker/
+    depends_on:
+      - localstack
+    entrypoint: [ "/godocker"]
   sqs_sns_setup:
     image: amazon/aws-cli:latest
     depends_on:

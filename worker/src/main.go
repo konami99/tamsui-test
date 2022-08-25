@@ -27,7 +27,7 @@ func main() {
 	for {
 		sess, err := session.NewSession(&aws.Config{
 			Region: aws.String("us-west-2"),
-			Endpoint: aws.String("http://localhost:4566"),
+			Endpoint: aws.String("http://localstack:4566"),
 			Credentials: credentials.NewStaticCredentials("local", "local", ""),
 		})
 	
