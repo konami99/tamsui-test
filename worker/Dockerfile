@@ -5,14 +5,14 @@ FROM golang:1.19-alpine
 WORKDIR /app
 
 # copy Go modules and dependencies to image
-COPY ./src/go.mod ./
-COPY ./src/go.sum ./
+COPY go.mod ./
+COPY go.sum ./
 
 # download Go modules and dependencies
 RUN go mod download
 
 # copy directory files i.e all files ending with .go
-COPY ./src/*.go ./
+COPY *.go ./
 
 # compile application
 RUN go build -o /godocker

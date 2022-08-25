@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"time"
+	"os"
 )
 
 func GetQueueURL(sess *session.Session, queue string) (*sqs.GetQueueUrlOutput, error) {
@@ -27,7 +28,7 @@ func main() {
 	for {
 		sess, err := session.NewSession(&aws.Config{
 			Region: aws.String("us-west-2"),
-			Endpoint: aws.String("http://localstack:4566"),
+			Endpoint: aws.String(os.Getenv("SQS_ENDPOINT")),
 			Credentials: credentials.NewStaticCredentials("local", "local", ""),
 		})
 	
