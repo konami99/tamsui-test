@@ -26,8 +26,10 @@ func GetQueueURL(sess *session.Session, queue string) (*sqs.GetQueueUrlOutput, e
 
 func main() {
 	for {
+		// export SQS_ENDPOINT=http://localhost:4566
+		// export AWS_REGION=us-west-2
 		sess, err := session.NewSession(&aws.Config{
-			Region: aws.String("us-west-2"),
+			Region: aws.String(os.Getenv("AWS_REGION")),
 			Endpoint: aws.String(os.Getenv("SQS_ENDPOINT")),
 			Credentials: credentials.NewStaticCredentials("local", "local", ""),
 		})
