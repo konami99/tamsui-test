@@ -70,8 +70,10 @@ func main() {
 		messages := msgResult.Messages
 		if len(messages) > 0 {
 			handle := msgResult.Messages[0].ReceiptHandle
+			body := msgResult.Messages[0].Body
 			// body := msgResult.Messages[0].Body
 			fmt.Println("Message Handle: " + *handle)
+			fmt.Println("Message Body: " + *body)
 			//fmt.Println("Got Queue URL: " + *urlRes.QueueUrl)
 			// process message
 

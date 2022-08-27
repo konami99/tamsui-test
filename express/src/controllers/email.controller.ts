@@ -8,10 +8,6 @@ export async function createEmailHandler(
   const client = new SNSClient({
     region: "us-west-2",
     endpoint: process.env.SNS_TOPIC_ENDPOINT,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-    }
   });
 
   const { emailEvents } = JSON.parse(process.env.COPILOT_SNS_TOPIC_ARNS as string);
