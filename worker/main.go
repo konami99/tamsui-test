@@ -5,7 +5,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"time"
 	"os"
 )
@@ -28,25 +27,30 @@ func main() {
 	for {
 		// export SQS_ENDPOINT=http://localhost:4566
 		// export AWS_REGION=us-west-2
+		// export COPILOT_QUEUE_URI=http://localstack:4566/000000000000/onexlab
 		sess, err := session.NewSession(&aws.Config{
 			Region: aws.String(os.Getenv("AWS_REGION")),
 			Endpoint: aws.String(os.Getenv("SQS_ENDPOINT")),
-			Credentials: credentials.NewStaticCredentials("local", "local", ""),
 		})
+
 	
 		if err != nil {
 			fmt.Printf("Failed to initialize new session: %v", err)
 			return
 		}
 	
-		queueName := "onexlab"
+		// export SQS_QUEUE_NAME=onexlab
+		/*
+		queueName := os.Getenv("SQS_QUEUE_NAME")
 	
 		urlRes, err := GetQueueURL(sess, queueName)
 		if err != nil {
 			fmt.Printf("Got an error while trying to create queue: %v", err)
 			return
 		}
+		*/
 	
+		
 		sqsClient := sqs.New(sess)
 	
 		var timeout int64 = 5
@@ -58,7 +62,7 @@ func main() {
 			MessageAttributeNames: []*string{
 				aws.String(sqs.QueueAttributeNameAll),
 			},
-			QueueUrl:            urlRes.QueueUrl,
+			QueueUrl:            aws.String(os.Getenv("COPILOT_QUEUE_URI")),
 			MaxNumberOfMessages: aws.Int64(1),
 			VisibilityTimeout:   &timeout,
 		})
@@ -69,17 +73,18 @@ func main() {
 			// body := msgResult.Messages[0].Body
 			fmt.Println("Message Handle: " + *handle)
 			//fmt.Println("Got Queue URL: " + *urlRes.QueueUrl)
-
 			// process message
 
+			
 			sqsClient.DeleteMessage(&sqs.DeleteMessageInput{
-				QueueUrl:      urlRes.QueueUrl,
+				QueueUrl:      aws.String(os.Getenv("COPILOT_QUEUE_URI")),
 				ReceiptHandle: handle,
 			})
 
 			time.Sleep(2 * time.Second)
 		} else {
 			fmt.Println("No message")
+			time.Sleep(2 * time.Second)
 		}
 	}
 }
