@@ -22,6 +22,9 @@ subscribe:
     - name: emailEvents
       service: express
 
+secrets:
+  AWS_REGION: /copilot/${COPILOT_APPLICATION_NAME}/${COPILOT_ENVIRONMENT_NAME}/secrets/AWS_REGION
+
 # Optional fields for more advanced use-cases.
 #
 #variables:                    # Pass environment variables as key value pairs.
