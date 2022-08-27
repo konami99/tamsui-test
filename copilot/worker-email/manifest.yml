@@ -18,8 +18,8 @@ count:
     min: 0
     max: 1
   queue_delay: # Ensure messages are processed within 10mins assuming a single message takes 250ms to process.
-    acceptable_latency: 10m
-    msg_processing_time: 250ms
+    acceptable_latency: 3s
+    msg_processing_time: 1s
 exec: true     # Enable running commands in your container.
 
 # The events can be be received from an SQS queue via the env var $COPILOT_QUEUE_URI.
