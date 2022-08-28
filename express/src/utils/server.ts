@@ -8,7 +8,7 @@ export default function createServer() {
   app.use(express.json());
   app.use(deserializeUser);
   app.use(cors({
-    origin: '*'
+    origin: process.env.TAMSUI_HOST
   }));
   routes(app);
   return app;
