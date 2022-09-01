@@ -1,10 +1,13 @@
-import mongoose from "mongoose";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 async function connect() {
-  const dbUri = process.env.DB_URI as string;
   try {
     console.log('DB connected');
-    await mongoose.connect(dbUri);
+    const client = new DynamoDBClient({
+      endpoint: process.env.DB_URI as string
+    });
+    const ddbDocClient = DynamoDBDocumentClient.from(client);
   } catch (error) {
     console.log(`Could not connect to db: ${error}`);
     process.exit(1);

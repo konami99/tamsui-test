@@ -127,3 +127,4 @@ dist
 .pnp.*
 
 mongo-volume
+dynamodb-volume
