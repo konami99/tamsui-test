@@ -27,7 +27,7 @@ func main() {
 	for {
 		// export SQS_ENDPOINT=http://localhost:4566
 		// export AWS_REGION=us-west-2
-		// export COPILOT_QUEUE_URI=http://localstack:4566/000000000000/onexlab
+		// export COPILOT_QUEUE_URI=http://localstack:4566/000000000000/emailEventsQueue
 		sess, err := session.NewSession(&aws.Config{
 			Region: aws.String(os.Getenv("AWS_REGION")),
 			Endpoint: aws.String(os.Getenv("SQS_ENDPOINT")),
