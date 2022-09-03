@@ -5,6 +5,7 @@ async function connect() {
   try {
     console.log('DB connected');
     const client = new DynamoDBClient({
+      region: process.env.AWS_REGION as string,
       endpoint: process.env.DB_URI as string
     });
     const ddbDocClient = DynamoDBDocumentClient.from(client);

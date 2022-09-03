@@ -15,10 +15,6 @@ services:
       - tamsui-test-dynamodb-local
     links:
       - tamsui-test-dynamodb-local
-    environment:
-      - NODE_ENV=dev
-      - AWS_ACCESS_KEY_ID=DUMMYIDEXAMPLE
-      - AWS_SECRET_ACCESS_KEY=DUMMYEXAMPLEKEY
   dynamodb-local:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     image: "amazon/dynamodb-local:latest"
